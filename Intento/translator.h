@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-// Archivos para separar declaraciones del codigo
+
 FILE *data_file;
 FILE *code_file;
 

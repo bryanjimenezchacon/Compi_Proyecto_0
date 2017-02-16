@@ -2,9 +2,9 @@
 #define GLOBAL_H
 #endif
 
-/*--------------------------------------------Contiene todos los datos globales---------------------------------------*/
+/*--------------------------------------------GLOBAL DATA---------------------------------------*/
 
-/*Representa el conjunto de tipos de tokens*/
+/*ENUM OF TOKENS*/
 typedef enum token_types{
 	BEGIN,END,READ,WRITE,ID,INTLITERAL,LPAREN,RPAREN,SEMICOLON,COMMA,
 	ASSIGNOP,PLUSOP,MINUSOP,SCANEOF

@@ -2,14 +2,16 @@
 #include <ctype.h>
 #include "translator.h"
 
-void translate(){
-    
+
+void translate(){    
     
     // Abrir el translated file generado por el parser con el lenguaje intermedio.
     translated_file = fopen("output_file.txt", "r" );
     mips_file = fopen ("mips_file.asm","w+"); // file en el cual se guardaran las instrucciones en MIPS
+
     //data_file = fopen ("data_file.txt","w+"); 
     //code_file = fopen ("code_file.txt","w+"); 
+
     data_file = tmpfile();
     code_file = tmpfile();
     char instruction[8]; //Guardara la instruccion que lea del outputfile. Lo maximo que tendra una instruccion son 8 ch

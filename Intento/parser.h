@@ -51,7 +51,7 @@ token previous_currentToken;
 
 const char * get_token_name(token t);
 
-/*---------------Definicion de Rutinas Semanticas------------*/
+/*---------------SEMANTIC ROUTINES FUNCTIONS------------*/
 
 char *symbols[9];
 int max_temp = 0;

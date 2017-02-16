@@ -6,6 +6,16 @@ token next_token(void){
 	return current_token;
 }
 
+
+
+/*
+
+MATCH
+
+Recognizes the matching tokens all over the document
+
+*/
+
 void match(token t){
 	if(nextev_token == t){
 		nextev_token = scanner();
@@ -20,14 +30,22 @@ void match(token t){
 
 }
 
+/*
+
+SYNTAX ERROR
+
+Shows a warning about the misuse of the Syntax
+
+*/
+
+
 void syntax_error(token t){
 	printf("Exception in Function Paser Type: Syntax Error. \nExpecting %s\n",get_token_name(t));
 	exit(0);
 }
 
 
-/*________________FUNCIONES PRINCIPALES DEL PARSER______-*/
-
+/*________________PARSER'S FUNCTIONS______-*/
 
 
 /*
@@ -39,7 +57,6 @@ SYSTEM GOAL
 
 void system_goal(void){
 	program();
-	match(SCANEOF);
 	finish();
 }
 
@@ -88,6 +105,14 @@ void statement_list(void){
 	}
 }
 
+
+/*
+STATEMENT
+
+<statement list> ::= <statement>{<statement>
+
+*/
+
 void statement(void){
 	token tok= next_token();
 	expr_rec result; //Analyze semanticly the Token
@@ -100,9 +125,9 @@ void statement(void){
 			match(ID);
 			result = process_id();
 			
-			//printf("Lo que devuelve el process_id nombre = %s valor = %d tipo = %d\n", result.name, result.val, result.kind);
+			// process_id nombre = %s value = %d type = %d\n", result.name, result.val, result.kind);
 			match(ASSIGNOP);
-			expression(&p_expr); // Le mado la direccion de la variable
+			expression(&p_expr); // Variable direction
 			assign(result,p_expr);
 			match(SEMICOLON);
 			break;
@@ -129,46 +154,38 @@ void statement(void){
 }
 
 
-void assign (expr_rec result, expr_rec p_expr){
-	//Generate code for assignment
-	char* salida;
-	salida = calloc(1024, sizeof(char)); 
-	strcpy(salida,extractEXPR(p_expr));
-	generate ("Store",salida, result.name,""); 
-}
+/*
 
+EXPRESSION
 
+<expr list>::=<expresion>{ ,<expresion>]
 
+*/
 
-void id_list(void){
-	/* <id_list> ::= ID{ ,ID}*/
-	expr_rec result;
-	strcpy(previous_tokenbuffer, token_buffer); // porque el match me cambia el token buffer
-	match(ID);
-	strcpy(result.name, previous_tokenbuffer);
-	read_id(result);
-	while(next_token() == COMMA){
-		strcpy(previous_tokenbuffer, token_buffer); // porque el match me cambia el token buffer
-		match(COMMA);
-		strcpy(previous_tokenbuffer, token_buffer); // porque el match me cambia el token buffer
-		match(ID);
-		strcpy(result.name, previous_tokenbuffer);
-		read_id(result);
+void expression (expr_rec *result){
+	expr_rec left_operand, right_operand;
+	op_rec op;
+    primary (&  left_operand);
+	while (next_token() == PLUSOP || next_token() == MINUSOP){
+		add_op (& op); 
+		primary (& right_operand);
+		left_operand = gen_infix(left_operand, op, right_operand);
 	}
+	*result = left_operand; 
 }
 
 
-void read_id (expr_rec in_var){ 
- generate ("Read",in_var.name,"Integer","");
-}
+/* 
 
-void write_expr (expr_rec out_expr){
- generate ("Write", out_expr.name, "Integer", ""); 
-}
+EXPR LIST
+
+<expr list>::=<expresion>{ ,<expresion>]
+
+*/
+
 
 
 void expr_list(void){
-	/*<expr list>::=<expresion>{ ,<expresion>]*/
 	expr_rec result;
 	expression(&result);
 	write_expr(result);
@@ -180,28 +197,74 @@ void expr_list(void){
 }
 
 
-void expression (expr_rec *result){
-	expr_rec left_operand, right_operand;
-	op_rec op;
-    primary (&  left_operand);
-   // printf("El valor del LEFT operand es nombre = %s  valor = %d tipo = %d\n", left_operand.name, left_operand.val, left_operand.kind);
-	while (next_token() == PLUSOP || next_token() == MINUSOP){
-		add_op (& op); 
-		//printf("El valor del OPERATOR es %d\n", op.operator);
-		primary (& right_operand);
-		//printf("El valor del RIHT operand es nombre = %s  valor = %d tipo = %d\n", right_operand.name, right_operand.val, right_operand.kind);
-		left_operand = gen_infix(left_operand, op, right_operand);
+
+/* 
+
+	ID_LIST
+
+<id_list> ::= ID{ ,ID}
+
+*/
+
+
+void id_list(void){
+	// Match change the Token Buffer
+	expr_rec result;
+	strcpy(previous_tokenbuffer, token_buffer); 
+	match(ID);
+	strcpy(result.name, previous_tokenbuffer);
+	read_id(result);
+	while(next_token() == COMMA){
+		strcpy(previous_tokenbuffer, token_buffer); 
+		match(COMMA);
+		strcpy(previous_tokenbuffer, token_buffer); 
+		match(ID);
+		strcpy(result.name, previous_tokenbuffer);
+		read_id(result);
 	}
-	*result = left_operand; 
 }
 
+
+/* 
+
+ASSIGN
+
+Generate code for Storing
+
+*/
+
+
+void assign (expr_rec result, expr_rec p_expr){
+	char* salida;
+	salida = calloc(1024, sizeof(char)); 
+	strcpy(salida,extractEXPR(p_expr));
+	generate ("Store",salida, result.name,""); 
+}
+
+void read_id (expr_rec in_var){ 
+ generate ("Read",in_var.name,"Integer","");
+}
+
+void write_expr (expr_rec out_expr){
+ generate ("Write", out_expr.name, "Integer", ""); 
+}
+
+
+/* 
+
+ADD_OP
+
+Generate code for adding or substracting
+
+<addop>::PLUSOP | MINUSOP
+
+*/
 
 
 void add_op(op_rec* p_operand){
 	token tok = next_token();
-	/*<addop>::PLUSOP | MINUSOP*/
 	if(tok == PLUSOP || tok==MINUSOP){
-		previous_currentToken = current_token; // porque el match me cambia el current token
+		previous_currentToken = current_token;
 		match(tok);
 		*p_operand = process_op();
 	}else{
@@ -210,36 +273,54 @@ void add_op(op_rec* p_operand){
 }
 
 
+/* 
+
+PRIMARY
+
+<primary>::= {<expresion>}
+
+*/
+
+
 void primary(expr_rec* p_operand){
 	expr_rec result;
 	token tok= next_token();
 	switch(tok){
 		case LPAREN:
-			/*<primary>::= {<expresion>}*/
 			match(LPAREN);
 			expression(&result);
 			*p_operand = result;
 			match(RPAREN);
 			break;
+
 		case ID:
 			/*<primary>::= ID*/
 			strcpy(previous_tokenbuffer, token_buffer); // porque el match me cambia el token buffer
 			match(ID);
 			*p_operand = process_id();
 			break;
+
 		case INTLITERAL:
 			/*<primary>::=INTLITERAL*/
 			strcpy(previous_tokenbuffer, token_buffer); // porque el match me cambia el token buffer
 			match(INTLITERAL);
 			*p_operand = process_literal();
 			break;
+
 		default:
 			syntax_error(tok);
 			break;
-
-
 	}
 }
+
+
+/*
+
+GET_TOKEN_NAME
+
+Returns the String form of the Token
+
+*/
 
 
 const char * get_token_name(token t){
@@ -278,6 +359,7 @@ const char * get_token_name(token t){
 
 // Translation Operations
 
+
 void open_outputFile(){
 	output_file = fopen ("output_file.txt","w+");
 }
@@ -288,16 +370,13 @@ void close_outputFile(){
 
 void start(void){
 	/*Semantic Initialization , none needed*/
-	//printf("%s\n","hola k ace" );
 }
 
 void finish(void){
+	/*Semantic finished*/
 	generate("Halt","","","");
 }
 
-void ident(){
-	// no sabemos que hace
-}
 
 
 expr_rec process_id(void){
@@ -317,7 +396,6 @@ expr_rec process_literal(void){
 	/*Convert literal to a numeric representation and build semantic record*/
 	t.kind = LITERALEXPR;
 	(void) sscanf (previous_tokenbuffer,"%d",& t.val);
-
 	return t; 
 
 }
@@ -332,7 +410,7 @@ op_rec process_op (void){
 	return o; 
 }
 
-
+/* Checks if there is not an ID in the Symbol_Table and generate the instruction*/
 void check_id(string s){
 	if(! lookup(s)){
 		enter(s);
@@ -340,6 +418,7 @@ void check_id(string s){
 	}
 }
 
+/* Checks if an ID is contained */
 bool lookup(string s){
 	int i;
 	for(i = 0; i < symTable_count; i++){
@@ -351,26 +430,19 @@ bool lookup(string s){
 	return false;	
 }
 
+/*Saves ID's into Symbol_Table*/
 void enter(string s){
 	strcpy(symbol_table[symTable_count], s);
 	symTable_count++;
 }
 
+/*Writes in the output file*/
 void generate(string op1,string op2,string op3,string op4){
-	//printf("VOY A ESCRIBIRRRR\n");
-	if((op1 == "Declare") || (op1 == "Store")){
-		fprintf(output_file,"%s %s %s %s\n" ,op1,op2,op3,op4);
-	}else if(op1 == "Halt"){
-		fprintf(output_file,"%s %s %s %s\n" ,op1,op2,op3,op4);
-	}
-	else{
-		fprintf(output_file,"%s %s %s %s\n" ,op1,op2,op3,op4);
-	}
-
+	
+	fprintf(output_file,"%s %s %s %s\n" ,op1,op2,op3,op4);
 }
 
 char* extractOP(op_rec p_operand){
-	//printf("VOY A PONER UN OPERATOR\n");
 	char* minus = "Sub";
 	char* plus = "Add";
 	if (p_operand.operator == MINUS){
@@ -397,36 +469,35 @@ char* extractEXPR(expr_rec p_expr){
 }
 
 expr_rec gen_infix (expr_rec e1, op_rec op, expr_rec e2) { 
-	//printf("ENTRANDO A GENIFIX\n");
 
 	expr_rec e_rec, e_rec1; 
 	/*An expr_rec with temp variant set.*/ 
 	e_rec.kind = LITERALEXPR; 
-	char* resultadoEXPR2; 
-	resultadoEXPR2 = calloc(1024, sizeof(char));
-	char* resultadoEXPR1; 
-	resultadoEXPR2 = calloc(1024, sizeof(char));
+	char* resultEXPR2; 
+	resultEXPR2 = calloc(1024, sizeof(char));
+	char* resultEXPR1; 
+	resultEXPR2 = calloc(1024, sizeof(char));
 
-	int resultado; 
+	int result; 
 	/* Generate code for infix operation. 
 	Get result temp and set up semantic record for result. */ 
 	if (e1.kind == LITERALEXPR && e2.kind == LITERALEXPR) { 
-		int numero1 = e1.val; 
-		int numero2 = e2.val; 
+		int number1 = e1.val; 
+		int number2 = e2.val; 
 		if (op.operator == PLUS) { 
-			resultado = numero1 + numero2; 
+			result = number1 + number2; 
 		} else {
-			resultado = numero1 - numero2; 
+			result = number1 - number2; 
 		}  
-		e_rec.val = resultado; 
+		e_rec.val = result; 
 		return e_rec; 
 	} else { 
 		expr_rec e_rec1; 
 		e_rec1.kind = TEMPEXPR; 
-		resultadoEXPR1 = extractEXPR(e1); 
-		resultadoEXPR2 = extractEXPR(e2); 
+		resultEXPR1 = extractEXPR(e1); 
+		resultEXPR2 = extractEXPR(e2); 
 		strncpy(e_rec1.name, get_temp(), MAXIDLEN);
-		generate (extractOP(op),resultadoEXPR1,resultadoEXPR2,e_rec1.name); 
+		generate (extractOP(op),resultEXPR1,resultEXPR2,e_rec1.name); 
 		return e_rec1; 
 	} 
 }

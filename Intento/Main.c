@@ -5,7 +5,7 @@
 #include "parser.c"
 #include "translator.c"
 
-// HOLAAAA
+
 int main( int argc, char *argv[] )
 {
 	int i;
