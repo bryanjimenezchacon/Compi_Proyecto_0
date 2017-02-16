@@ -1,0 +1,17 @@
+Read A Integer 
+Read B Integer 
+Read CC Integer 
+Read DD Integer 
+Declare A Integer 
+Declare B Integer 
+Declare CC Integer 
+Declare Temp1 Integer 
+Add B CC Temp1
+Declare Temp2 Integer 
+Add Temp1 A Temp2
+Declare DD Integer 
+Declare Temp3 Integer 
+Add Temp2 DD Temp3
+Store Temp3 A 
+Write A Integer 
+Halt   
