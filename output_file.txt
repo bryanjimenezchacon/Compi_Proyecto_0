@@ -1,4 +1,0 @@
-Declare A Integer 
-Store 18 A 
-Write A Integer 
-Halt   
