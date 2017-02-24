@@ -1,7 +1,0 @@
-BEGIN
-BB:= 4;
-c :=1;
-A:= BB+314-c;
-WRITE (A);
-END
-SCANEOF

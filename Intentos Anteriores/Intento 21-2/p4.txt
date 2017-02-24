@@ -1,4 +1,0 @@
-BEGIN
-x := (a+b)-c;
-END
-SCANEOF

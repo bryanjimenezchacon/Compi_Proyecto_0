@@ -1,6 +1,0 @@
-BEGIN
-READ(BB,C);
-A:= BB+314-(c-25);
-WRITE (A);
-END
-SCANEOF

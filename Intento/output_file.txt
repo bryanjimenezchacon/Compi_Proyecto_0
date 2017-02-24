@@ -1,0 +1,7 @@
+Declare A Integer 
+Declare BB Integer 
+Declare Temp1 Integer 
+Sub BB 314 Temp1
+Declare Temp2 Integer 
+Add Temp1 A Temp2
+Store Temp2 A 
