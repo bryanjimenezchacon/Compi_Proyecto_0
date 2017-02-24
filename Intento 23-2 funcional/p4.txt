@@ -1,4 +1,4 @@
 BEGIN
-A:= BB-314 + A ;
+x := (a+b)-c;
 END
 SCANEOF

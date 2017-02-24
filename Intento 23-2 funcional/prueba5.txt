@@ -1,0 +1,6 @@
+BEGIN
+READ(BB,C);
+A:= BB+314-(C-25);
+WRITE (A);
+END
+SCANEOF
