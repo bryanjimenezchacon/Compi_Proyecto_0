@@ -1,0 +1,5 @@
+BEGIN
+ C:= 8;
+ A:=(C+2);
+ WRITE(A);
+END
