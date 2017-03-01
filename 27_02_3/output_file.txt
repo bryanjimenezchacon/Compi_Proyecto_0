@@ -1,0 +1,8 @@
+Declare A Integer 
+Store 18 A 
+Declare B Integer 
+Declare Temp1 Integer 
+Sub A 4 Temp1
+CMPNZ 0 Temp1 24 B
+Write A Integer 
+Halt   
