@@ -1,0 +1,6 @@
+Declare A Integer 
+Store 18 A 
+Declare B Integer 
+CMPNZ 0 A 24 B
+Write A Integer 
+Halt   

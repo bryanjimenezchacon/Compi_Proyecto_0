@@ -3,3 +3,11 @@ git add *
 git commit -m "Comentarios"
 
 git push
+
+---------------------------------------
+
+Compilar en ubuntu 
+
+gcc -c Main.c Main
+./Main prueba8.txt
+

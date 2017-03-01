@@ -1,0 +1,8 @@
+Declare C Integer 
+Store 8 C 
+Declare A Integer 
+Declare Temp1 Integer 
+Add C 2 Temp1
+CMPNZ Temp1 C 5 A
+Write A Integer 
+Halt   
