@@ -1,3 +1,15 @@
+/*****************************************************************************************************************************
+						   Compiladores e Intérpretes Gr 40
+							     Proyecto 0
+
+						Bryan Steve Jiménez Chacón (2014114175)
+						Ariel Montero Monestel     (2014073164)
+						Luis Rojas Alfaro          (2014054405)
+
+								IS 2017
+
+******************************************************************************************************************************/
+
 #include <stdio.h>
 #include <ctype.h>
 #include "translator.h"
@@ -31,18 +43,18 @@ void translate(){
 
 
         if ( strcmp(instruction,"Declare") == 0){
-            fscanf(translated_file, " %1023s",varA); //Obtengo la primera variable (ID) del declare
-            fprintf(data_file,"    %s: .word 512 \n",varA); // Sera siempre un word porque solo hay integers
+            fscanf(translated_file, " %1023s",varA); //We get the first variable (ID) from the DECLARE
+            fprintf(data_file,"    %s: .word 512 \n",varA); // Always a Word because there are no Integers
 
 
           
         } else if (strcmp(instruction,"Store")==0){
             fprintf(code_file,"\n@Soy un store\n");
-            fscanf(translated_file, " %1023s",varA);//Obtengo la primera variable del store
-            fscanf(translated_file, " %1023s",varB);//Obtengo la segunda variable del store
-            if (atoi(varA) != 0) {// si es un numero 
+            fscanf(translated_file, " %1023s",varA);//We get the first variable from the store
+            fscanf(translated_file, " %1023s",varB);//We get the second variable from the store
+            if (atoi(varA) != 0) {// If there is a number
             fprintf(code_file, "    LDR R0, =%s\n    LDR R8, =%s\n    STR R0,[R8]\n", varA, varB);
-            } else{// ambos son IDS
+            } else{// Two ID's
                 fprintf(code_file, "    LDR R0,=%s\n    LDR R7,[R0]\n    LDR R8, =%s\n    STR R7,[R8]\n", varA, varB);
             }
 
@@ -50,17 +62,17 @@ void translate(){
         
         } else if (strcmp(instruction,"Add")==0){
             fprintf(code_file,"\n@Soy un add\n");
-            fscanf(translated_file, " %1023s",varA);//Obtengo la primera variable del Add 3
-            fscanf(translated_file, " %1023s",varB);//Obtengo la segunda variable del Add a
-            fscanf(translated_file, " %1023s",varC);//Obtengo la segunda variable del Add temp1
+            fscanf(translated_file, " %1023s",varA);//We get the first variable from the Add 3
+            fscanf(translated_file, " %1023s",varB);//We get the second variable from the Add a
+            fscanf(translated_file, " %1023s",varC);//We get the second variable from the Add temp1
             
-             if (atoi(varA) != 0 && atoi(varB)) {//Ambos son enteros
+             if (atoi(varA) != 0 && atoi(varB)) {//Two Integers
                 fprintf(code_file, "    LDR R1, =%s\n    \n    LDR R2, =%s\n    ADD R3, R1, R2\n  LDR R8,=%s\n    STR R3,[R8]",varA,varB,varC);
-            } else if (atoi(varA) != 0 && !atoi(varB)) {//el primero es entero y el segundo no es entero
+            } else if (atoi(varA) != 0 && !atoi(varB)) {//Integer and no Integer
                 fprintf(code_file, "    LDR R1, =%s\n    LDR R7, =%s\n    LDR R2,[R7]\n    ADD R3, R1, R2\n  LDR R8,=%s\n    STR R3,[R8]",varA,varB,varC);
-            } else if (!(atoi(varA) != 0) && atoi(varB)) {//el primero no es entero y el segundo es entero
+            } else if (!(atoi(varA) != 0) && atoi(varB)) {//No Integer and Integer
                 fprintf(code_file, "    LDR R7, =%s\n    LDR R1,[R7]\n    LDR R2, =%s\n    ADD R3, R1, R2\n  LDR R8,=%s\n    STR R3,[R8]",varA,varB,varC);
-            } else {// ambos son no enteros
+            } else {// Zero Integers
                 fprintf(code_file, "    LDR R7, =%s\n    LDR R1,[R7]\n    LDR R7, =%s\n    LDR R2,[R7]\n    ADD R3, R1, R2\n  LDR R8,=%s\n    STR R3,[R8]",varA,varB,varC);
             }
 
@@ -71,13 +83,13 @@ void translate(){
             fscanf(translated_file, " %1023s",varB);
             fscanf(translated_file, " %1023s",varC);
             
-            if (atoi(varA) != 0 && atoi(varB)) {//Ambos son enteros
+            if (atoi(varA) != 0 && atoi(varB)) {//Two Integers
                 fprintf(code_file, "    LDR R1, =%s\n    \n    LDR R2, =%s\n    SUB R3, R1, R2\n  LDR R8,=%s\n    STR R3,[R8]",varA,varB,varC);
-            } else if (atoi(varA) != 0 && !atoi(varB)) {//el primero es entero y el segundo no es entero
+            } else if (atoi(varA) != 0 && !atoi(varB)) {//Integer and no Integer
                 fprintf(code_file, "    LDR R1, =%s\n    LDR R7, =%s\n    LDR R2,[R7]\n    SUB R3, R1, R2\n  LDR R8,=%s\n    STR R3,[R8]",varA,varB,varC);
-            } else if (!(atoi(varA) != 0) && atoi(varB)) {//el primero no es entero y el segundo es entero
+            } else if (!(atoi(varA) != 0) && atoi(varB)) {//No Integer and Integer
                 fprintf(code_file, "    LDR R7, =%s\n    LDR R1,[R7]\n    LDR R2, =%s\n    SUB R3, R1, R2\n  LDR R8,=%s\n    STR R3,[R8]",varA,varB,varC);
-            } else {// ambos son no enteros
+            } else {// Zero Integers
                 fprintf(code_file, "    LDR R7, =%s\n    LDR R1,[R7]\n    LDR R7, =%s\n    LDR R2,[R7]\n    SUB R3, R1, R2\n  LDR R8,=%s\n    STR R3,[R8]",varA,varB,varC);
             }    
 
@@ -90,7 +102,7 @@ void translate(){
             fscanf(translated_file, " %1023s",varB);// Zero = true
             fscanf(translated_file, " %1023s",varC);// Zero = false
             fscanf(translated_file, " %1023s",varD);// Variable Id
-             //EMPEZAR AQUI CON VAR D
+
 
             if (isdigit(*varA)) //It is a variable
             {
@@ -100,11 +112,11 @@ void translate(){
                 fprintf(code_file, "    LDR R1, =%s\n    \n    LDR R2, [R1]\n    CMP R2,#0\n ",varA); 
             }
 
-            if (atoi(varB)!=0) // osea variable B es un entero -CASOS DONDE VAR A = 0
+            if (atoi(varB)!=0) // Variable B is an Integer (Where VAR A = 0)
             {
                 fprintf(code_file, "    LDR R1, =%s\n    LDR R2, =%s\n    STREQ R1,[R2]\n" ,varB,varD);
             }
-            else{//Osea hay que cargar varB a memoria-CASOS DONDE VAR A = 0
+            else{//Load variable B to memory (Where VAR A = 0)
                 fprintf(code_file, "    LDR R3, =%s\n    LDR R1,[R3]\n    LDR R2, =%s\n    STREQ R1,[R2]\n" ,varB,varD);   
             }
 
@@ -116,13 +128,13 @@ void translate(){
             }
         }else if  (strcmp(instruction,"Read")==0){
             fprintf(code_file,"\n@Soy un Read\n");
-            fscanf(translated_file, " %1023s",varA);//Obtengo la primera variable del Add 3
+            fscanf(translated_file, " %1023s",varA);//Get the first letter from the Add 3
             fprintf(code_file, "    mov R7, #3 \n    mov R0, #1 \n    ldr R1, =%s\n    mov R2, #12\n    svc #0",varA);
 
         
         }else if  (strcmp(instruction,"Write")==0){
             fprintf(code_file,"\n@Soy un Write\n");
-            fscanf(translated_file, " %1023s",varA);//Obtengo la primera variable del store
+            fscanf(translated_file, " %1023s",varA);//Get the first variable from the Store
             fprintf(code_file, "    push {ip, lr}\n    LDR R8,=%s\n    LDR R1,[R8]\n    ldr R0,=string\n    bl printf\n    pop {ip,pc}",varA);
 
           

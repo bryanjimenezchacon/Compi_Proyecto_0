@@ -1,3 +1,15 @@
+/*****************************************************************************************************************************
+						   Compiladores e Intérpretes Gr 40
+							     Proyecto 0
+
+						Bryan Steve Jiménez Chacón (2014114175)
+						Ariel Montero Monestel     (2014073164)
+						Luis Rojas Alfaro          (2014054405)
+
+								IS 2017
+
+******************************************************************************************************************************/
+
 #include <stdio.h>
 #include <string.h> /* memset */
 #include <stdlib.h>
@@ -18,5 +30,5 @@ int main( int argc, char *argv[] )
 	close_file();
 	close_outputFile();
 
-	translate();
+	translate();//Translates to ARM
 }

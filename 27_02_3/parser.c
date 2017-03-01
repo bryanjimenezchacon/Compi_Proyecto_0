@@ -1,6 +1,17 @@
+/*****************************************************************************************************************************
+						   Compiladores e Intérpretes Gr 40
+							     Proyecto 0
+
+						Bryan Steve Jiménez Chacón (2014114175)
+						Ariel Montero Monestel     (2014073164)
+						Luis Rojas Alfaro          (2014054405)
+
+								IS 2017
+
+******************************************************************************************************************************/
+
 #include "parser.h"
 #include <string.h>
-//#include "translator.c"
 
 token next_token(void){
 	return current_token;
@@ -10,9 +21,7 @@ token next_token(void){
 
 /*
 
-MATCH
-
-Recognizes the matching tokens all over the document
+MATCH Recognizes the matching tokens all over the document
 
 */
 
@@ -32,9 +41,7 @@ void match(token t){
 
 /*
 
-SYNTAX ERROR
-
-Shows a warning about the misuse of the Syntax
+SYNTAX ERROR Shows a warning about the misuse of the Syntax
 
 */
 
@@ -45,13 +52,11 @@ void syntax_error(token t){
 }
 
 
-/*________________PARSER'S FUNCTIONS______-*/
+/*********PARSER'S FUNCTIONS**********/
 
 
 /*
-SYSTEM GOAL
-
-<system goal> ::= <program> SCANEOF
+SYSTEM GOAL <system goal> ::= <program> SCANEOF
 
 */
 
@@ -62,9 +67,7 @@ void system_goal(void){
 
 
 /*
-PROGRAM
-
-<program> ::= BEGIN <statement list> END
+PROGRAM <program> ::= BEGIN <statement list> END
 
 */
 
@@ -78,9 +81,7 @@ void program(void){
 
 
 /*
-STATEMENT LIST
-
-<statement list> ::= <statement>{<statement>
+STATEMENT LIST <statement list> ::= <statement>{<statement>
 
 */
 
@@ -107,9 +108,7 @@ void statement_list(void){
 
 
 /*
-STATEMENT
-
-<statement list> ::= <statement>{<statement>
+STATEMENT <statement list> ::= <statement>{<statement>
 
 */
 
@@ -161,9 +160,7 @@ void statement(void){
 
 /*
 
-EXPRESSION
-
-<expr list>::=<expresion>{ ,<expresion>]
+EXPRESSION <expr list>::=<expresion>{ ,<expresion>]
 
 */
 
@@ -250,9 +247,7 @@ void conditionals(expr_rec operandos, expr_rec result){
 
 /* 
 
-EXPR LIST
-
-<expr list>::=<expresion>{ ,<expresion>]
+EXPR LIST <expr list>::=<expresion>{ ,<expresion>]
 
 */
 
@@ -273,9 +268,7 @@ void expr_list(void){
 
 /* 
 
-	ID_LIST
-
-<id_list> ::= ID{ ,ID}
+ID_LIST <id_list> ::= ID{ ,ID}
 
 */
 
@@ -300,9 +293,7 @@ void id_list(void){
 
 /* 
 
-ASSIGN
-
-Generate code for Storing
+ASSIGN Generate code for Storing
 
 */
 
@@ -332,11 +323,7 @@ void write_expr (expr_rec out_expr){
 
 /* 
 
-ADD_OP
-
-Generate code for adding or substracting
-
-<addop>::PLUSOP | MINUSOP
+ADD_OP Generate code for adding or substracting <addop>::PLUSOP | MINUSOP
 
 */
 
@@ -355,9 +342,7 @@ void add_op(op_rec* p_operand){
 
 /* 
 
-PRIMARY
-
-<primary>::= {<expresion>}
+PRIMARY <primary>::= {<expresion>}
 
 */
 
@@ -378,14 +363,14 @@ void primary(expr_rec* p_operand){
 
 		case ID:
 			/*<primary>::= ID*/
-			strcpy(previous_tokenbuffer, token_buffer); // porque el match me cambia el token buffer
+			strcpy(previous_tokenbuffer, token_buffer);
 			match(ID);
 			*p_operand = process_id();
 			break;
 
 		case INTLITERAL:
 			/*<primary>::=INTLITERAL*/
-			strcpy(previous_tokenbuffer, token_buffer); // porque el match me cambia el token buffer
+			strcpy(previous_tokenbuffer, token_buffer); 
 			match(INTLITERAL);
 			*p_operand = process_literal();
 			break;
@@ -399,9 +384,7 @@ void primary(expr_rec* p_operand){
 
 /*
 
-GET_TOKEN_NAME
-
-Returns the String form of the Token
+GET_TOKEN_NAME Returns the String form of the Token
 
 */
 
